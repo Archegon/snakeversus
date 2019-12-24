@@ -6,6 +6,7 @@ class Player:
         self.color = color
         self.size = 40
         self.direction = 'RIGHT'
+        self.key_direction = 'None'
         self.speed = 10
         self.x = 0
         self.y = 0
@@ -27,15 +28,23 @@ class Player:
 
     def controls(self, event):
         if event.type == pygame.KEYDOWN and event.key == self.k_forward:
-            self.direction = 'UP'
+            self.key_direction = 'UP'
         if event.type == pygame.KEYDOWN and event.key == self.k_right:
-            self.direction = 'RIGHT'
+            self.key_direction = 'RIGHT'
         if event.type == pygame.KEYDOWN and event.key == self.k_down:
-            self.direction = 'DOWN'
+            self.key_direction = 'DOWN'
         if event.type == pygame.KEYDOWN and event.key == self.k_left:
-            self.direction = 'LEFT'
+            self.key_direction = 'LEFT'
+
         if event.type == pygame.KEYDOWN and event.key == pygame.K_f:
             self.add_body()
+
+    def __collision(self):
+        if len(self.body) > 1:
+            for index in range(len(self.body)):
+                if index > 0:
+                    if self.body[0][0] == self.body[index][0]:
+                        print("Hit")
 
     def rect(self, x=None, y=None):
         if x is None:
@@ -53,20 +62,21 @@ class Player:
     def add_body(self):
         print("Added new body")
         if self.body[-1][1] == 'UP':
-            self.body.append([[self.body[-1][0][0], self.body[-1][0][1]+1], ''])
+            self.body.append([[self.body[-1][0][0], self.body[-1][0][1] + 1], ''])
         if self.body[-1][1] == 'RIGHT':
-            self.body.append([[self.body[-1][0][0]-1, self.body[-1][0][1]], ''])
+            self.body.append([[self.body[-1][0][0] - 1, self.body[-1][0][1]], ''])
         if self.body[-1][1] == 'DOWN':
-            self.body.append([[self.body[-1][0][0], self.body[-1][0][1]-1], ''])
+            self.body.append([[self.body[-1][0][0], self.body[-1][0][1] - 1], ''])
         if self.body[-1][1] == 'LEFT':
-            self.body.append([[self.body[-1][0][0]+1, self.body[-1][0][1]], ''])
+            self.body.append([[self.body[-1][0][0] + 1, self.body[-1][0][1]], ''])
 
     def draw(self):
         pygame.draw.rect(self.window.screen, self.color, self.rect())
 
         for index in range(len(self.body)):
             if index > 0:
-                pygame.draw.rect(self.window.screen, self.color, self.rect(self.body[index][0][0], self.body[index][0][1]))
+                pygame.draw.rect(self.window.screen, self.color,
+                                 self.rect(self.body[index][0][0], self.body[index][0][1]))
 
     def __body_update(self):
         self.body[0][0][0] = self.x
@@ -74,7 +84,7 @@ class Player:
 
         for index in reversed(range(len(self.body))):
             if len(self.body) > 1:
-                self.body[index][1] = self.body[index-1][1]
+                self.body[index][1] = self.body[index - 1][1]
 
             if index > 0:
                 if self.body[index][1] == 'UP':
@@ -90,6 +100,18 @@ class Player:
 
     def movement(self):
         if (pygame.time.get_ticks() - self.lastMoveTime) >= self.movementDelay:
+            if len(self.body) > 1:
+                if self.direction == 'UP' and self.key_direction != 'DOWN':
+                    self.direction = self.key_direction
+                elif self.direction == 'RIGHT' and self.key_direction != 'LEFT':
+                    self.direction = self.key_direction
+                elif self.direction == 'DOWN' and self.key_direction != 'UP':
+                    self.direction = self.key_direction
+                elif self.direction == 'LEFT' and self.key_direction != 'RIGHT':
+                    self.direction = self.key_direction
+            else:
+                self.direction = self.key_direction
+
             if self.direction == 'UP':
                 self.y -= 1
                 self.lastMoveTime = pygame.time.get_ticks()
@@ -102,7 +124,13 @@ class Player:
             if self.direction == 'LEFT':
                 self.x -= 1
                 self.lastMoveTime = pygame.time.get_ticks()
+
             self.__body_update()
+
+    def update(self):
+        self.draw()
+        self.__collision()
+        self.movement()
 
 
 class Grid:
