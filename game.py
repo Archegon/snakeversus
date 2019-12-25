@@ -1,4 +1,6 @@
 import pygame
+import random
+from object import GameLink
 
 
 class Player:
@@ -9,14 +11,15 @@ class Player:
         self.key_direction = 'None'
         self.speed = 10
         self.step = 1
-        self.x = grid.width
-        self.y = grid.height
+        self.x = 0
+        self.y = grid.x_start
         self.grid = grid
         self.window = window
         self.border = False
         self.movementDelay = 110 - self.speed
         self.lastMoveTime = 0
         self.body = [[[self.x, self.y], self.direction]]
+        self.score = 0
         self.k_forward = None
         self.k_right = None
         self.k_down = None
@@ -41,6 +44,9 @@ class Player:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_f:
             self.add_body()
 
+    def __score_update(self):
+        self.score = len(self.body) - 1
+
     def __collision(self):
         self.grid.set_body(self.body)
 
@@ -48,7 +54,8 @@ class Player:
             for index in range(len(self.body)):
                 if index > 0:
                     if self.body[0][0] == self.body[index][0]:
-                        print("Hit body")
+                        del self.body[index:]
+                        break
 
         if self.border:
             if self.grid.collision() == '+x' or self.grid.collision() == '+y' or self.grid.collision() == '-y' or self.grid.collision() == '-x':
@@ -80,8 +87,11 @@ class Player:
 
         return pygame.Rect(x, y, self.size, self.size)
 
+    def eat(self):
+        self.add_body()
+        self.speed += 5
+
     def add_body(self):
-        print("Added new body")
         if self.body[-1][1] == 'UP':
             self.body.append([[self.body[-1][0][0], self.body[-1][0][1] + 1], ''])
         if self.body[-1][1] == 'RIGHT':
@@ -127,8 +137,12 @@ class Player:
 
         self.body[0][1] = self.direction
 
+    def __movement_delay(self):
+        self.movementDelay = 110 - self.speed
+        return self.movementDelay
+
     def movement(self):
-        if (pygame.time.get_ticks() - self.lastMoveTime) >= self.movementDelay:
+        if (pygame.time.get_ticks() - self.lastMoveTime) >= self.__movement_delay():
             if len(self.body) > 1:
                 if self.direction == 'UP' and self.key_direction != 'DOWN':
                     self.direction = self.key_direction
@@ -156,10 +170,60 @@ class Player:
 
             self.__body_update()
 
+        if self.speed > 80:
+            self.speed = 80
+        elif self.speed < 0:
+            self.speed = 0
+
     def update(self):
         self.draw()
         self.__collision()
         self.movement()
+        self.__score_update()
+
+
+class Food(GameLink):
+    def __init__(self, player):
+        self.x = 0
+        self.y = 0
+        self.player = player
+        self.size = 40
+        self.generate()
+        self.color = (255, 0, 0)
+
+    def generate(self):
+        x = random.randint(0, self.grid.width)
+        y = random.randint(self.grid.x_start, self.grid.height)
+
+        for player in range(len(self.player)):
+            if len(self.player[player].body) > 1:
+                for index in range(len(self.player[player].body)):
+                    if index > 0:
+                        if (self.x, self.y) == self.player[player].body[index][0]:
+                            print("Food in body, regenerating")
+                            self.generate()
+
+        self.x = x
+        self.y = y
+
+    def draw(self):
+        pygame.draw.rect(self.window.screen, self.color, self.rect())
+
+    def __collision(self):
+        for index in range(len(self.player)):
+            if self.pos() == tuple(self.player[index].body[0][0]):
+                self.player[index].eat()
+                self.generate()
+
+    def rect(self):
+        return pygame.Rect(self.grid.convert(self.x), self.grid.convert(self.y), self.size, self.size)
+
+    def update(self):
+        self.draw()
+        self.__collision()
+
+    def pos(self):
+        return self.x, self.y
 
 
 class TopBar:
@@ -168,6 +232,11 @@ class TopBar:
         self.size = 120
         self.height = self.size
         self.width = self.window.width
+        self.rect = None
+
+    def update(self):
+        self.rect = pygame.Rect(0, 0, self.window.width, self.size)
+        pygame.draw.rect(self.window.screen, (0, 0, 0), self.rect)
 
 
 class Grid:
@@ -190,8 +259,7 @@ class Grid:
         self.body = body
 
     def draw(self):
-        self.rect = pygame.Rect(0, 0, self.window.width, self.top_size)
-        pygame.draw.rect(self.window.screen, (0, 0, 0), self.rect)
+        self.top_bar.update()
 
         if self.draw_grid:
             for index in range(int(self.width + 1)):
