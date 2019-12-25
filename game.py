@@ -41,8 +41,8 @@ class Player:
         if event.type == pygame.KEYDOWN and event.key == self.k_left:
             self.key_direction = 'LEFT'
 
-        # if event.type == pygame.KEYDOWN and event.key == pygame.K_f:
-        #     self.add_body()
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_f:
+            self.add_body()
 
     def __score_update(self):
         self.score = len(self.body) - 1
@@ -137,7 +137,7 @@ class Player:
         self.body[0][1] = self.direction
 
     def __movement_delay(self):
-        self.speed = self.score*4.5
+        self.speed = self.score * 4.75
         self.movementDelay = 110 - self.speed
         return self.movementDelay
 

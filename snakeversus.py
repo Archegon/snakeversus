@@ -98,8 +98,6 @@ def score_mode():
     global game_running
     global score_header_str
 
-    print(player1.speed)
-
     score_p1 = display.Text("Player 1", 32, 85 + 100, 20, player1.color)
     score_text = display.Text("Score:", 32, 95 + 100, 60)
     score_val = display.Text(str(player1.score), 32, 175 + 100, 60)
