@@ -11,10 +11,11 @@ running = True
 
 clock = pygame.time.Clock()
 window = display.Window(1920, 1080, fullscreen)
-grid = game.Grid(window)
-player1 = game.Player(window, grid, (255, 255, 255))
+top_bar = game.TopBar(window)
+grid = game.Grid(window, top_bar)
+player1 = game.Player(window, grid, (0, 0, 255))
 player1.set_keys(pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_a)
-player2 = game.Player(window, grid, (255, 255, 255))
+player2 = game.Player(window, grid, (0, 255, 0))
 player2.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
 
 
@@ -22,6 +23,7 @@ while running:
     if game_running:
         window.screen.fill((0, 0, 0))
         player1.update()
+        grid.draw()
 
     for event in pygame.event.get():
         player1.controls(event)
