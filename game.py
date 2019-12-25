@@ -41,8 +41,8 @@ class Player:
         if event.type == pygame.KEYDOWN and event.key == self.k_left:
             self.key_direction = 'LEFT'
 
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_f:
-            self.add_body()
+        # if event.type == pygame.KEYDOWN and event.key == pygame.K_f:
+        #     self.add_body()
 
     def __score_update(self):
         self.score = len(self.body) - 1
@@ -89,7 +89,6 @@ class Player:
 
     def eat(self):
         self.add_body()
-        self.speed += 5
 
     def add_body(self):
         if self.body[-1][1] == 'UP':
@@ -138,6 +137,7 @@ class Player:
         self.body[0][1] = self.direction
 
     def __movement_delay(self):
+        self.speed = self.score*4.5
         self.movementDelay = 110 - self.speed
         return self.movementDelay
 
@@ -170,8 +170,8 @@ class Player:
 
             self.__body_update()
 
-        if self.speed > 80:
-            self.speed = 80
+        if self.speed > 110:
+            self.speed = 110
         elif self.speed < 0:
             self.speed = 0
 

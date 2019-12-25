@@ -6,7 +6,7 @@ import object
 pygame.init()
 pygame.display.set_caption("Snake Versus")
 
-fullscreen = False
+fullscreen = True
 game_running = True
 score_win = 20
 
@@ -30,7 +30,7 @@ program_state = {
     "score_mode": lambda: score_mode()
 }
 
-current_state = "score_mode"
+current_state = "main_menu"
 last_state = ""
 
 
@@ -66,11 +66,6 @@ def main_menu():
 
     for event in pygame.event.get():
         selection1.controls(event)
-
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-            window.display.quit()
-            pygame.quit()
-            exit()
 
         if event.type == pygame.QUIT:
             running = False
@@ -153,11 +148,6 @@ def score_mode():
             toggle_pause()
             pause_selection.selection = 0
 
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-            window.display.quit()
-            pygame.quit()
-            exit()
-
         if event.type == pygame.QUIT:
             running = False
 
@@ -174,6 +164,7 @@ while running:
             player1.set_keys(pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_a)
             player2 = game.Player(window, grid, green)
             player2.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
+            player2.x = grid.width
             food = game.Food([player1, player2])
 
     last_state = current_state
