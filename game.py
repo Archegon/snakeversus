@@ -184,22 +184,24 @@ class Food(GameLink):
     def __init__(self, player):
         self.x = 0
         self.y = 0
+        self.speed = 100
+        self.direction = ""
+        self.lastMoveTime = 0
         self.player = player
         self.size = 40
+        self.move = True
         self.generate()
         self.color = (255, 0, 0)
 
     def generate(self):
+        self.direction = random.randint(0, 3)
         x = random.randint(0, self.grid.width)
         y = random.randint(self.grid.x_start, self.grid.height)
 
         for player in range(len(self.player)):
-            if len(self.player[player].body) > 1:
-                for index in range(len(self.player[player].body)):
-                    if index > 0:
-                        if (self.x, self.y) == self.player[player].body[index][0]:
-                            print("Food in body, regenerating")
-                            self.generate()
+            for index in range(len(self.player[player].body)):
+                if (x, y) == tuple(self.player[player].body[index][0]):
+                    self.generate()
 
         self.x = x
         self.y = y
@@ -216,7 +218,31 @@ class Food(GameLink):
     def rect(self):
         return pygame.Rect(self.grid.convert(self.x), self.grid.convert(self.y), self.size, self.size)
 
+    def movement(self):
+        if self.move:
+            if pygame.time.get_ticks() - self.lastMoveTime >= self.speed:
+                if self.direction == 0:
+                    self.x += 1
+                elif self.direction == 1:
+                    self.x -= 1
+                elif self.direction == 2:
+                    self.y += 1
+                elif self.direction == 3:
+                    self.y -= 1
+
+                if self.x > self.grid.width:
+                    self.x = 0
+                if self.x < 0:
+                    self.x = self.grid.width
+                if self.y > self.grid.height:
+                    self.y = self.grid.y_start
+                if self.y < self.grid.y_start:
+                    self.y = self.grid.height
+
+                self.lastMoveTime = pygame.time.get_ticks()
+
     def update(self):
+        self.movement()
         self.draw()
         self.__collision()
 
