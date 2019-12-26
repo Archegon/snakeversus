@@ -174,9 +174,9 @@ class Player(GameLink):
             self.speed = 0
 
     def update(self):
+        self.movement()
         self.draw()
         self.__collision()
-        self.movement()
         self.__score_update()
 
 
