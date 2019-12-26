@@ -32,6 +32,11 @@ class Text(GameLink):
     def draw(self):
         self.window.screen.blit(self.text, (self.x - self.width / 2, self.y))
 
+    def set_string(self, string):
+        self.text = self.font.render(string, False, self.color)
+        self.width = self.text.get_width()
+        self.height = self.text.get_height()
+
     def call(self):
         if self.func is not None:
             return self.func()

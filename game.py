@@ -3,8 +3,8 @@ import random
 from object import GameLink
 
 
-class Player:
-    def __init__(self, window, grid, color):
+class Player(GameLink):
+    def __init__(self, color):
         self.color = color
         self.size = 40
         self.direction = 'RIGHT'
@@ -12,9 +12,7 @@ class Player:
         self.speed = 10
         self.step = 1
         self.x = 0
-        self.y = grid.x_start
-        self.grid = grid
-        self.window = window
+        self.y = self.grid.x_start
         self.border = False
         self.movementDelay = 110 - self.speed
         self.lastMoveTime = 0
@@ -137,7 +135,7 @@ class Player:
         self.body[0][1] = self.direction
 
     def __movement_delay(self):
-        self.speed = self.score * 4.75
+        self.speed = self.score * 4.0
         self.movementDelay = 110 - self.speed
         return self.movementDelay
 
@@ -170,8 +168,8 @@ class Player:
 
             self.__body_update()
 
-        if self.speed > 110:
-            self.speed = 110
+        if self.speed > 95:
+            self.speed = 95
         elif self.speed < 0:
             self.speed = 0
 
@@ -226,9 +224,8 @@ class Food(GameLink):
         return self.x, self.y
 
 
-class TopBar:
-    def __init__(self, window):
-        self.window = window
+class TopBar(GameLink):
+    def __init__(self):
         self.size = 120
         self.height = self.size
         self.width = self.window.width
@@ -239,11 +236,10 @@ class TopBar:
         pygame.draw.rect(self.window.screen, (0, 0, 0), self.rect)
 
 
-class Grid:
-    def __init__(self, window, top_bar):
+class Grid(GameLink):
+    def __init__(self, top_bar):
         self.top_bar = top_bar
         self.size = 40
-        self.window = window
         self.color = (255, 255, 255)
         self.top_size = self.top_bar.size
         self.x_start = self.top_size // self.size
