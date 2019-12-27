@@ -22,7 +22,7 @@ pygame.mixer.music.set_volume(0.2)
 
 white = (255, 255, 255)
 green = (0, 255, 0)
-blue = (0, 0, 128)
+blue = (54, 196, 247)
 red = (255, 0, 0)
 black = (0, 0, 0)
 
