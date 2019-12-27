@@ -18,7 +18,7 @@ game.Player.EAT_SOUND = pygame.mixer.Sound('./sounds/eat2.wav')
 game.Player.REDUCE_SOUND = pygame.mixer.Sound('./sounds/jump.wav')
 
 pygame.mixer.music.load('./sounds/background music.mp3')
-pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.set_volume(0.3)
 
 white = (255, 255, 255)
 green = (0, 255, 0)
