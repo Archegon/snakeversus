@@ -118,13 +118,11 @@ def score_mode(mode):
             pygame.mixer.music.play(-1)
             in_progress = True
 
-    score_header.set_string("First to " + str(score_win) + " Wins!")
+    if mode == 1:
+        score_header.set_string("First to " + str(score_win) + " Wins!")
+        window.screen.fill(black)
 
-    window.screen.fill(black)
-    grid.draw()
-
-    if mode >= 1:
-        if player1.score >= 18:
+        if  player1.score >= 18:
             score_music = True
         else:
             pygame.mixer.music.stop()
@@ -138,56 +136,94 @@ def score_mode(mode):
         score_text = display.Text("Score:", 32, 95 + 100, 60)
         score_val = display.Text(str(player1.score), 32, 175 + 100, 60)
 
+        player1.update()
+        food.update()
+        grid.draw()
         score_text.draw()
         score_p1.draw()
         score_val.draw()
+        score_header.draw()
 
-        player1.update()
+    if mode == 2:
+        score_header.set_string("First to " + str(score_win) + " Wins!")
+        window.screen.fill(black)
 
-    if mode >= 2:
         if player2.score >= 18 or player1.score >= 18:
             score_music = True
         else:
             pygame.mixer.music.stop()
             in_progress = False
 
-        if player2.score >= score_win:
+        if player1.score >= score_win:
+            score_header.set_string("Player 1 Wins")
+            set_current_state("ScoreMode_completed")
+        elif player2.score >= score_win:
             score_header.set_string("Player 2 Wins")
             set_current_state("ScoreMode_completed")
 
+        score_p1 = display.Text("Player 1", 32, 85 + 100, 20, player1.color)
+        score_text = display.Text("Score:", 32, 95 + 100, 60)
+        score_val = display.Text(str(player1.score), 32, 175 + 100, 60)
         score_p2 = display.Text("Player 2", 32, 85 + 400, 20, player2.color)
         score_text2 = display.Text("Score:", 32, 95 + 400, 60)
         score_val2 = display.Text(str(player2.score), 32, 175 + 400, 60)
 
+        player1.update()
+        player2.update()
+        food.update()
+        grid.draw()
+        score_text.draw()
+        score_p1.draw()
+        score_val.draw()
         score_p2.draw()
         score_text2.draw()
         score_val2.draw()
+        score_header.draw()
+    if mode == 3:
+        score_header.set_string("First to " + str(score_win) + " Wins!")
+        window.screen.fill(black)
 
-        player2.update()
-    if mode >= 3:
         if player3.score >= 18 or player2.score >= 18 or player1.score >= 18:
             score_music = True
         else:
             pygame.mixer.music.stop()
             in_progress = False
 
-        if player3.score >= score_win:
+        if player1.score >= score_win:
+            score_header.set_string("Player 1 Wins")
+            set_current_state("ScoreMode_completed")
+        elif player2.score >= score_win:
+            score_header.set_string("Player 2 Wins")
+            set_current_state("ScoreMode_completed")
+        elif player3.score >= score_win:
             score_header.set_string("Player 3 Wins")
             set_current_state("ScoreMode_completed")
 
+        score_p1 = display.Text("Player 1", 32, 85 + 100, 20, player1.color)
+        score_text = display.Text("Score:", 32, 95 + 100, 60)
+        score_val = display.Text(str(player1.score), 32, 175 + 100, 60)
+        score_p2 = display.Text("Player 2", 32, 85 + 400, 20, player2.color)
+        score_text2 = display.Text("Score:", 32, 95 + 400, 60)
+        score_val2 = display.Text(str(player2.score), 32, 175 + 400, 60)
         score_p3 = display.Text("Player 3", 32, 85 + 1300, 20, player3.color)
         score_text3 = display.Text("Score:", 32, 95 + 1300, 60)
         score_val3 = display.Text(str(player3.score), 32, 175 + 1300, 60)
 
+        player1.update()
+        player2.update()
+        player3.update()
+        food.update()
+        grid.draw()
+        score_p1.draw()
+        score_val.draw()
+        score_text.draw()
+        score_p2.draw()
+        score_text2.draw()
+        score_val2.draw()
         score_p3.draw()
         score_text3.draw()
         score_val3.draw()
-
-        player3.update()
-
-    food.update()
-
-    score_header.draw()
+        score_header.draw()
 
     for event in pygame.event.get():
         if mode >= 1:
@@ -201,8 +237,8 @@ def score_mode(mode):
             set_current_state("ScoreMode_pause")
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             food.generate()
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_f:
-            player1.eat()
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_END:
+            player3.eat()
 
         if event.type == pygame.QUIT:
             running = False
@@ -259,6 +295,12 @@ while running:
             pause_selection.selection = 0
             player1 = game.Player(blue)
             player1.set_keys(pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_a)
+            player2 = game.Player(green)
+            player2.set_keys(pygame.K_i, pygame.K_l, pygame.K_k, pygame.K_j)
+            player2.x = grid.width
+            player3 = game.Player(yellow)
+            player3.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
+            player3.y = grid.height
             food = game.Food([player1])
             set_current_state("1_player_score_mode_running")
 
@@ -268,8 +310,11 @@ while running:
             player1 = game.Player(blue)
             player1.set_keys(pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_a)
             player2 = game.Player(green)
-            player2.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
+            player2.set_keys(pygame.K_i, pygame.K_l, pygame.K_k, pygame.K_j)
             player2.x = grid.width
+            player3 = game.Player(yellow)
+            player3.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
+            player3.y = grid.height
             food = game.Food([player1, player2])
             set_current_state("2_player_score_mode_running")
 
@@ -290,6 +335,9 @@ while running:
         elif current_state == "ScoreMode_pause":
             pause_selection.selection = 0
             save_state = last_state
+
+        elif current_state == "ScoreMode_completed":
+            pygame.mixer.music.stop()
 
     last_state = current_state
 
