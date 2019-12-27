@@ -12,13 +12,13 @@ class Player(GameLink):
         self.size = 40
         self.direction = 'RIGHT'
         self.key_direction = 'None'
-        self.speed = 90
+        self.speed = 80
         self.step = 1
         self.x = 0
         self.y = self.grid.x_start
         self.border = False
         self.movementDelay = 110 - self.speed
-        self.max_speed = 90
+        self.max_speed = 80
         self.lastMoveTime = 0
         self.body = [[[self.x, self.y], self.direction]]
         self.score = 0
