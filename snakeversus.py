@@ -9,7 +9,7 @@ pygame.init()
 
 pygame.display.set_caption("Snake Versus")
 
-fullscreen = False
+fullscreen = True
 score_win = 20
 
 running = True
@@ -246,10 +246,10 @@ while running:
             player1 = game.Player(blue)
             player1.set_keys(pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_a)
             player2 = game.Player(green)
-            player2.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
+            player2.set_keys(pygame.K_i, pygame.K_l, pygame.K_k, pygame.K_)
             player2.x = grid.width
             player3 = game.Player(yellow)
-            player3.set_keys(pygame.K_i, pygame.K_l, pygame.K_k, pygame.K_j)
+            player3.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
             player3.y = grid.height
             food = game.Food([player1, player2, player3])
 
