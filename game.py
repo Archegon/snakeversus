@@ -211,6 +211,7 @@ class Food(GameLink):
 
     def __collision(self):
         for index in range(len(self.player)):
+            print(str(self.pos()) + "   " + str(tuple(self.player[index].body[0][0])))
             if self.pos() == tuple(self.player[index].body[0][0]):
                 self.player[index].eat()
                 self.generate()
@@ -242,6 +243,7 @@ class Food(GameLink):
                 self.lastMoveTime = pygame.time.get_ticks()
 
     def update(self):
+        self.__collision()
         self.movement()
         self.draw()
         self.__collision()
