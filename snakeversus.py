@@ -3,13 +3,22 @@ import display
 import game
 import object
 
+pygame.mixer.pre_init(44100, -16, 2, 2048)
+pygame.mixer.init()
 pygame.init()
+
 pygame.display.set_caption("Snake Versus")
 
 fullscreen = False
-score_win = 25
+score_win = 20
 
 running = True
+
+game.Player.EAT_SOUND = pygame.mixer.Sound('./sounds/eat2.wav')
+game.Player.REDUCE_SOUND = pygame.mixer.Sound('./sounds/jump.wav')
+
+pygame.mixer.music.load('./sounds/background music.mp3')
+pygame.mixer.music.set_volume(0.5)
 
 white = (255, 255, 255)
 green = (0, 255, 0)
@@ -48,6 +57,8 @@ option2 = display.Text("Head to Head Mode", 32, text1.x, text1.y + 350)
 option3 = display.Text("Options", 32, text1.x, text1.y + 400)
 option4 = display.Text("Quit game", 32, text1.x, text1.y + 450, func=lambda: quit_game())
 selection1 = display.Selection([option1, option2, option3, option4], (219, 68, 68))
+
+pygame.mixer.music.play(-1)
 
 
 def main_menu():
@@ -136,6 +147,8 @@ def score_mode():
             set_current_state("ScoreMode_pause")
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             food.generate()
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_f:
+            player2.eat()
 
         if event.type == pygame.QUIT:
             running = False
@@ -156,6 +169,7 @@ def score_mode_completed():
 while running:
     if current_state != last_state:
         if current_state == "MainMenu":
+            pygame.mixer.music.play()
             selection1.selection = 0
         elif current_state == "ScoreMode_initial":
             pause_selection.selection = 0
@@ -170,6 +184,9 @@ while running:
             pause_selection.selection = 0
 
     last_state = current_state
+
+    if current_state != "MainMenu":
+        pygame.mixer.music.stop()
 
     if current_state == "MainMenu":
         main_menu()

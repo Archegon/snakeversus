@@ -4,17 +4,21 @@ from object import GameLink
 
 
 class Player(GameLink):
+    EAT_SOUND = None
+    REDUCE_SOUND = None
+
     def __init__(self, color):
         self.color = color
         self.size = 40
         self.direction = 'RIGHT'
         self.key_direction = 'None'
-        self.speed = 10
+        self.speed = 90
         self.step = 1
         self.x = 0
         self.y = self.grid.x_start
         self.border = False
         self.movementDelay = 110 - self.speed
+        self.max_speed = 90
         self.lastMoveTime = 0
         self.body = [[[self.x, self.y], self.direction]]
         self.score = 0
@@ -39,9 +43,6 @@ class Player(GameLink):
         if event.type == pygame.KEYDOWN and event.key == self.k_left:
             self.key_direction = 'LEFT'
 
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_f:
-            self.add_body()
-
     def __score_update(self):
         self.score = len(self.body) - 1
 
@@ -52,6 +53,7 @@ class Player(GameLink):
             for index in range(len(self.body)):
                 if index > 0:
                     if self.body[0][0] == self.body[index][0]:
+                        self.REDUCE_SOUND.play()
                         del self.body[index:]
                         break
 
@@ -86,6 +88,7 @@ class Player(GameLink):
         return pygame.Rect(x, y, self.size, self.size)
 
     def eat(self):
+        self.EAT_SOUND.play()
         self.add_body()
 
     def add_body(self):
@@ -135,7 +138,8 @@ class Player(GameLink):
         self.body[0][1] = self.direction
 
     def __movement_delay(self):
-        self.speed = self.score * 4.0
+        # self.speed = self.score * 4.0
+        self.speed = self.max_speed - self.score * 5.0
         self.movementDelay = 110 - self.speed
         return self.movementDelay
 
@@ -168,8 +172,8 @@ class Player(GameLink):
 
             self.__body_update()
 
-        if self.speed > 95:
-            self.speed = 95
+        if self.speed > self.max_speed:
+            self.speed = self.max_speed
         elif self.speed < 0:
             self.speed = 0
 
@@ -211,7 +215,6 @@ class Food(GameLink):
 
     def __collision(self):
         for index in range(len(self.player)):
-            print(str(self.pos()) + "   " + str(tuple(self.player[index].body[0][0])))
             if self.pos() == tuple(self.player[index].body[0][0]):
                 self.player[index].eat()
                 self.generate()
