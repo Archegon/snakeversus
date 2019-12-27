@@ -33,6 +33,7 @@ object.GameLink.grid = grid
 
 current_state = "MainMenu"
 last_state = ""
+save_state = ""
 
 
 def set_current_state(text):
@@ -93,7 +94,7 @@ def pause_menu():
         pause_selection.controls(event)
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            set_current_state("ScoreMode_running")
+            set_current_state(save_state)
 
         if event.type == pygame.QUIT:
             running = False
@@ -145,10 +146,10 @@ def score_mode(mode):
 
     if mode >= 2:
         if player2.score >= 18 or player1.score >= 18:
-            pygame.mixer.music.load('./sounds/heartbeat.mp3')
-            pygame.mixer.music.play(-1)
+            score_music = True
         else:
             pygame.mixer.music.stop()
+            in_progress = False
 
         if player2.score >= score_win:
             score_header.set_string("Player 2 Wins")
@@ -164,12 +165,11 @@ def score_mode(mode):
 
         player2.update()
     if mode >= 3:
-
         if player3.score >= 18 or player2.score >= 18 or player1.score >= 18:
-            pygame.mixer.music.load('./sounds/heartbeat.mp3')
-            pygame.mixer.music.play(-1)
+            score_music = True
         else:
             pygame.mixer.music.stop()
+            in_progress = False
 
         if player3.score >= score_win:
             score_header.set_string("Player 3 Wins")
@@ -221,11 +221,11 @@ def score_mode_completed():
 
 
 selection_1 = display.Text("1 Player Mode", 32, window.width / 2, 500,
-                           func=lambda: set_current_state("1_player_score_mode"))
+                           func=lambda: set_current_state("1_player_score_mode_init"))
 selection_2 = display.Text("2 Player Mode", 32, window.width / 2, 570,
-                           func=lambda: set_current_state("2_player_score_mode"))
+                           func=lambda: set_current_state("2_player_score_mode_init"))
 selection_3 = display.Text("3 Player Mode", 32, window.width / 2, 640,
-                           func=lambda: set_current_state("3_player_score_mode"))
+                           func=lambda: set_current_state("3_player_score_mode_init"))
 player_selection_1 = display.Selection([selection_1, selection_2, selection_3], (219, 68, 68))
 
 
@@ -254,14 +254,15 @@ while running:
             pygame.mixer.music.set_volume(0.2)
             pygame.mixer.music.play(-1)
 
-        elif current_state == "1_player_score_mode":
+        elif current_state == "1_player_score_mode_init":
             pygame.mixer.music.stop()
             pause_selection.selection = 0
             player1 = game.Player(blue)
             player1.set_keys(pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_a)
             food = game.Food([player1])
+            set_current_state("1_player_score_mode_running")
 
-        elif current_state == "2_player_score_mode":
+        elif current_state == "2_player_score_mode_init":
             pygame.mixer.music.stop()
             pause_selection.selection = 0
             player1 = game.Player(blue)
@@ -270,8 +271,9 @@ while running:
             player2.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
             player2.x = grid.width
             food = game.Food([player1, player2])
+            set_current_state("2_player_score_mode_running")
 
-        elif current_state == "3_player_score_mode":
+        elif current_state == "3_player_score_mode_init":
             pygame.mixer.music.stop()
             pause_selection.selection = 0
             player1 = game.Player(blue)
@@ -283,9 +285,11 @@ while running:
             player3.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
             player3.y = grid.height
             food = game.Food([player1, player2, player3])
+            set_current_state("3_player_score_mode_running")
 
         elif current_state == "ScoreMode_pause":
             pause_selection.selection = 0
+            save_state = last_state
 
     last_state = current_state
 
@@ -293,11 +297,11 @@ while running:
         main_menu()
     elif current_state == "PlayerSelection":
         player_selection()
-    elif current_state == "1_player_score_mode":
+    elif current_state == "1_player_score_mode_running":
         score_mode(1)
-    elif current_state == "2_player_score_mode":
+    elif current_state == "2_player_score_mode_running":
         score_mode(2)
-    elif current_state == "3_player_score_mode":
+    elif current_state == "3_player_score_mode_running":
         score_mode(3)
     elif current_state == "ScoreMode_pause":
         pause_menu()
