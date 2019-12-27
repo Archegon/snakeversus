@@ -239,8 +239,8 @@ class Food(GameLink):
                 if self.x < 0:
                     self.x = self.grid.width
                 if self.y > self.grid.height:
-                    self.y = self.grid.y_start
-                if self.y < self.grid.y_start:
+                    self.y = self.grid.x_start
+                if self.y < self.grid.x_start:
                     self.y = self.grid.height
 
                 self.lastMoveTime = pygame.time.get_ticks()
@@ -274,7 +274,6 @@ class Grid(GameLink):
         self.color = (255, 255, 255)
         self.top_size = self.top_bar.size
         self.x_start = self.top_size // self.size
-        self.y_start = 0
         self.width = self.window.width // self.size - 1
         self.height = self.window.height // self.size - 1
         self.body = None
