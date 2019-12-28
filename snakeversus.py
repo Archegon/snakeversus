@@ -9,7 +9,7 @@ pygame.init()
 
 pygame.display.set_caption("Snake Versus")
 
-fullscreen = False
+fullscreen = True
 score_win = 20
 
 running = True
@@ -26,9 +26,9 @@ yellow = (250, 196, 47)
 
 clock = pygame.time.Clock()
 window = display.Window(1920, 1080, fullscreen)
-object.GameLink.window = window
 top_bar = game.TopBar()
 grid = game.Grid(top_bar)
+object.GameLink.window = window
 object.GameLink.grid = grid
 
 current_state = "MainMenu"
@@ -122,7 +122,7 @@ def score_mode(mode):
         score_header.set_string("First to " + str(score_win) + " Wins!")
         window.screen.fill(black)
 
-        if  player1.score >= 18:
+        if player1.score >= 18:
             score_music = True
         else:
             pygame.mixer.music.stop()
@@ -179,6 +179,7 @@ def score_mode(mode):
         score_text2.draw()
         score_val2.draw()
         score_header.draw()
+
     if mode == 3:
         score_header.set_string("First to " + str(score_win) + " Wins!")
         window.screen.fill(black)
@@ -295,12 +296,6 @@ while running:
             pause_selection.selection = 0
             player1 = game.Player(blue)
             player1.set_keys(pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_a)
-            player2 = game.Player(green)
-            player2.set_keys(pygame.K_i, pygame.K_l, pygame.K_k, pygame.K_j)
-            player2.x = grid.width
-            player3 = game.Player(yellow)
-            player3.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
-            player3.y = grid.height
             food = game.Food([player1])
             set_current_state("1_player_score_mode_running")
 
@@ -310,11 +305,8 @@ while running:
             player1 = game.Player(blue)
             player1.set_keys(pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_a)
             player2 = game.Player(green)
-            player2.set_keys(pygame.K_i, pygame.K_l, pygame.K_k, pygame.K_j)
+            player2.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
             player2.x = grid.width
-            player3 = game.Player(yellow)
-            player3.set_keys(pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_LEFT)
-            player3.y = grid.height
             food = game.Food([player1, player2])
             set_current_state("2_player_score_mode_running")
 
