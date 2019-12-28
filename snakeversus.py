@@ -26,9 +26,9 @@ yellow = (250, 196, 47)
 
 clock = pygame.time.Clock()
 window = display.Window(1920, 1080, fullscreen)
+object.GameLink.window = window
 top_bar = game.TopBar()
 grid = game.Grid(top_bar)
-object.GameLink.window = window
 object.GameLink.grid = grid
 
 current_state = "MainMenu"
