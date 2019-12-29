@@ -9,8 +9,9 @@ pygame.init()
 
 pygame.display.set_caption("Snake Versus")
 
-fullscreen = False
+fullscreen = True
 score_win = 20
+match_point = 19
 
 running = True
 
@@ -122,7 +123,7 @@ def score_mode(mode):
         score_header.set_string("First to " + str(score_win) + " Wins!")
         window.screen.fill(black)
 
-        if player1.score >= 18:
+        if player1.score >= match_point:
             score_music = True
         else:
             pygame.mixer.music.stop()
@@ -148,7 +149,7 @@ def score_mode(mode):
         score_header.set_string("First to " + str(score_win) + " Wins!")
         window.screen.fill(black)
 
-        if player2.score >= 18 or player1.score >= 18:
+        if player2.score >= match_point or player1.score >= match_point:
             score_music = True
         else:
             pygame.mixer.music.stop()
@@ -184,7 +185,7 @@ def score_mode(mode):
         score_header.set_string("First to " + str(score_win) + " Wins!")
         window.screen.fill(black)
 
-        if player3.score >= 18 or player2.score >= 18 or player1.score >= 18:
+        if player3.score >= match_point or player2.score >= match_point or player1.score >= match_point:
             score_music = True
         else:
             pygame.mixer.music.stop()
