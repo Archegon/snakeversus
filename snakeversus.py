@@ -75,7 +75,7 @@ def main_menu():
 
 
 pause_option1 = display.Text("Resume", 32, window.width / 2, 250, black,
-                             func=lambda: set_current_state("ScoreMode_running"))
+                             func=lambda: set_current_state(save_state))
 pause_option2 = display.Text("Exit to menu", 32, window.width / 2, 300, black,
                              func=lambda: set_current_state("MainMenu"))
 pause_option3 = display.Text("Quit game", 32, window.width / 2, 350, black, func=lambda: quit_game())
