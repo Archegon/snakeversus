@@ -3,6 +3,13 @@ import random
 from object import GameLink
 
 
+class State:
+    def __init__(self):
+        self.current_state = ""
+        self.last_state = ""
+        self.save_state = ""
+
+
 class Player(GameLink):
     EAT_SOUND = None
     REDUCE_SOUND = None

@@ -9,7 +9,7 @@ pygame.init()
 
 pygame.display.set_caption("Snake Versus")
 
-fullscreen = True
+fullscreen = False
 score_win = 20
 match_point = 19
 
@@ -50,13 +50,6 @@ def quit_game():
 
 
 score_header_str = ""
-text1 = display.Text("SNAKE VERSUS", 84, window.width / 2, 200, (219, 68, 68))
-text2 = display.Text("By DAV", 24, text1.x + 270, text1.y + 70)
-option1 = display.Text("Score Mode", 32, text1.x, text1.y + 300, func=lambda: set_current_state("PlayerSelection"))
-option2 = display.Text("Head to Head Mode", 32, text1.x, text1.y + 350)
-option3 = display.Text("Options", 32, text1.x, text1.y + 400)
-option4 = display.Text("Quit game", 32, text1.x, text1.y + 450, func=lambda: quit_game())
-selection1 = display.Selection([option1, option2, option3, option4], (219, 68, 68))
 
 
 def main_menu():
@@ -73,14 +66,6 @@ def main_menu():
 
         if event.type == pygame.QUIT:
             running = False
-
-
-pause_option1 = display.Text("Resume", 32, window.width / 2, 250, black,
-                             func=lambda: set_current_state(save_state))
-pause_option2 = display.Text("Exit to menu", 32, window.width / 2, 300, black,
-                             func=lambda: set_current_state("MainMenu"))
-pause_option3 = display.Text("Quit game", 32, window.width / 2, 350, black, func=lambda: quit_game())
-pause_selection = display.Selection([pause_option1, pause_option2, pause_option3], white)
 
 
 def pause_menu():
@@ -100,8 +85,6 @@ def pause_menu():
         if event.type == pygame.QUIT:
             running = False
 
-
-score_header = display.Text(score_header_str, 48, window.width / 2, 40)
 
 score_music = False
 in_progress = False
@@ -258,15 +241,6 @@ def score_mode_completed():
             running = False
 
 
-selection_1 = display.Text("1 Player Mode", 32, window.width / 2, 500,
-                           func=lambda: set_current_state("1_player_score_mode_init"))
-selection_2 = display.Text("2 Player Mode", 32, window.width / 2, 570,
-                           func=lambda: set_current_state("2_player_score_mode_init"))
-selection_3 = display.Text("3 Player Mode", 32, window.width / 2, 640,
-                           func=lambda: set_current_state("3_player_score_mode_init"))
-player_selection_1 = display.Selection([selection_1, selection_2, selection_3], (219, 68, 68))
-
-
 def player_selection():
     global running
 
@@ -287,14 +261,31 @@ def player_selection():
 while running:
     if current_state != last_state:
         if current_state == "MainMenu":
+            text1 = display.Text("SNAKE VERSUS", 84, window.width / 2, 200, (219, 68, 68))
+            text2 = display.Text("By DAV", 24, text1.x + 270, text1.y + 70)
+            option1 = display.Text("Score Mode", 32, text1.x, text1.y + 300,
+                                   func=lambda: set_current_state("PlayerSelection"))
+            option2 = display.Text("Head to Head Mode", 32, text1.x, text1.y + 350)
+            option3 = display.Text("Options", 32, text1.x, text1.y + 400)
+            option4 = display.Text("Quit game", 32, text1.x, text1.y + 450, func=lambda: quit_game())
+            selection1 = display.Selection([option1, option2, option3, option4], (219, 68, 68))
             selection1.selection = 0
             pygame.mixer.music.load('./sounds/background music.mp3')
             pygame.mixer.music.set_volume(0.2)
             pygame.mixer.music.play(-1)
 
+        elif current_state == "PlayerSelection":
+            selection_1 = display.Text("1 Player Mode", 32, window.width / 2, 500,
+                                       func=lambda: set_current_state("1_player_score_mode_init"))
+            selection_2 = display.Text("2 Player Mode", 32, window.width / 2, 570,
+                                       func=lambda: set_current_state("2_player_score_mode_init"))
+            selection_3 = display.Text("3 Player Mode", 32, window.width / 2, 640,
+                                       func=lambda: set_current_state("3_player_score_mode_init"))
+            player_selection_1 = display.Selection([selection_1, selection_2, selection_3], (219, 68, 68))
+
         elif current_state == "1_player_score_mode_init":
             pygame.mixer.music.stop()
-            pause_selection.selection = 0
+            score_header = display.Text(score_header_str, 48, window.width / 2, 40)
             player1 = game.Player(blue)
             player1.set_keys(pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_a)
             food = game.Food([player1])
@@ -302,7 +293,7 @@ while running:
 
         elif current_state == "2_player_score_mode_init":
             pygame.mixer.music.stop()
-            pause_selection.selection = 0
+            score_header = display.Text(score_header_str, 48, window.width / 2, 40)
             player1 = game.Player(blue)
             player1.set_keys(pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_a)
             player2 = game.Player(green)
@@ -313,7 +304,7 @@ while running:
 
         elif current_state == "3_player_score_mode_init":
             pygame.mixer.music.stop()
-            pause_selection.selection = 0
+            score_header = display.Text(score_header_str, 48, window.width / 2, 40)
             player1 = game.Player(blue)
             player1.set_keys(pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_a)
             player2 = game.Player(green)
@@ -326,6 +317,12 @@ while running:
             set_current_state("3_player_score_mode_running")
 
         elif current_state == "ScoreMode_pause":
+            pause_option1 = display.Text("Resume", 32, window.width / 2, 250, black,
+                                         func=lambda: set_current_state(save_state))
+            pause_option2 = display.Text("Exit to menu", 32, window.width / 2, 300, black,
+                                         func=lambda: set_current_state("MainMenu"))
+            pause_option3 = display.Text("Quit game", 32, window.width / 2, 350, black, func=lambda: quit_game())
+            pause_selection = display.Selection([pause_option1, pause_option2, pause_option3], white)
             pause_selection.selection = 0
             save_state = last_state
 
