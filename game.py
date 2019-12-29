@@ -74,6 +74,9 @@ class Player(GameLink):
                 self.y = self.grid.height
                 self.body[0][1] = self.grid.collision()
 
+            self.body[0][0][0] = self.x
+            self.body[0][0][1] = self.y
+
     def rect(self, x=None, y=None):
         if x is None:
             x = self.grid.convert(self.x)
