@@ -239,7 +239,7 @@ def score_mode(mode):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             food.generate()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_END:
-            player3.eat()
+            player1.eat()
 
         if event.type == pygame.QUIT:
             running = False
