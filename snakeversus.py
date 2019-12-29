@@ -9,7 +9,7 @@ pygame.init()
 
 pygame.display.set_caption("Snake Versus")
 
-fullscreen = True
+fullscreen = False
 score_win = 20
 
 running = True
@@ -239,7 +239,7 @@ def score_mode(mode):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             food.generate()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_END:
-            player3.eat()
+            player1.eat()
 
         if event.type == pygame.QUIT:
             running = False
