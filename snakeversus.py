@@ -9,7 +9,7 @@ pygame.init()
 
 pygame.display.set_caption("Snake Versus")
 
-fullscreen = True
+fullscreen = False
 score_win = 20
 
 running = True
