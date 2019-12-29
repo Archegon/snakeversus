@@ -138,7 +138,6 @@ class Player(GameLink):
         self.body[0][1] = self.direction
 
     def __movement_delay(self):
-        # self.speed = self.score * 4.0
         self.speed = self.max_speed - self.score * 5.0
         self.movementDelay = 110 - self.speed
         return self.movementDelay
@@ -170,8 +169,6 @@ class Player(GameLink):
                 self.x -= self.step
                 self.lastMoveTime = pygame.time.get_ticks()
 
-            self.__body_update()
-
         if self.speed > self.max_speed:
             self.speed = self.max_speed
         elif self.speed < 0:
@@ -179,8 +176,9 @@ class Player(GameLink):
 
     def update(self):
         self.movement()
-        self.draw()
         self.__collision()
+        self.__body_update()
+        self.draw()
         self.__score_update()
 
 
