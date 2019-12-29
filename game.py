@@ -74,8 +74,8 @@ class Player(GameLink):
                 self.y = self.grid.height
                 self.body[0][1] = self.grid.collision()
 
-                self.body[0][0][0] = self.x
-                self.body[0][0][1] = self.y
+            self.body[0][0][0] = self.x
+            self.body[0][0][1] = self.y
 
     def rect(self, x=None, y=None):
         if x is None:
@@ -182,8 +182,8 @@ class Player(GameLink):
 
     def update(self):
         self.movement()
-        self.draw()
         self.__collision()
+        self.draw()
         self.__score_update()
 
 
